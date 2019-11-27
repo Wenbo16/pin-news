@@ -1,0 +1,10 @@
+lxml
+json-rpc
+pymongo
+pika
+werkzeug
+requests
+redis
+sklearn
+python-dateutil
+newspaper3k
