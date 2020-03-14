@@ -1,19 +1,30 @@
 import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import { Input } from 'antd';
 import Auth from '../Auth/Auth';
+import logo from './logo.png'
 import './Base.css';
+
+const { Search } = Input;
 
 const Base = () => {
   let history = useHistory();
   return (
     <div>
-      <nav className="nav-bar indigo lighten-1">
-        <div className="nav-wrapper">
-          <a href="/" className="brand-logo">
-            {' '}
-            Pin News
-          </a>
-          <ul id="nav-mobile" className="right">
+      <header className="header">
+        {/* <a href="/" className="brand-logo"> */}
+          <img className="logo" src={logo} alt="logo" />
+        {/* </a> */}
+        <div className="search_form">
+          <Search
+            placeholder="input search text"
+            onSearch={value => console.log(value)}
+            style={{ width: 600 }}
+          />
+        </div>
+
+        <div className="user_auth">
+          <ul>
             {Auth.isUserAuthenticated() ? (
               <div>
                 <li>{Auth.getEmail()}</li>
@@ -33,8 +44,8 @@ const Base = () => {
             )}
           </ul>
         </div>
-      </nav>
-      <br />
+            
+      </header>
     </div>
   )
 };

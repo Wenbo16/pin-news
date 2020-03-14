@@ -89,7 +89,12 @@ class NewsPanel extends React.Component<any, FormState> {
   render() {
     const { news } = this.state;
     if (news) {
-      return <div>{this.renderNews()}</div>;
+      return <div className="news-panel-content">
+        <div className="feed-main-title">
+            <span>For You</span>
+        </div>
+        {this.renderNews()}
+      </div>
     }
     return <div>Loading...</div>;
   }

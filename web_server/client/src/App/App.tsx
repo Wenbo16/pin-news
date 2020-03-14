@@ -1,13 +1,13 @@
 import React from 'react';
-import logo from './logo.png';
 import './App.css';
-
 import NewsPanel from '../NewsPanel/NewsPanel';
+import SideMenu from '../SideMenu/SideMenu.view';
+
 
 const App = () => (
-  <div>
-    {/* <img className="logo" src={logo} alt="logo" /> */}
+  <div>  
     <div className="container">
+      <SideMenu />
       <NewsPanel />
     </div>
   </div>
