@@ -57,6 +57,7 @@ class NewsPanel extends React.Component<any, FormState> {
         Authorization: `bearer ${Auth.getToken()}`
       }
     });
+    
     fetch(request)
       .then(res => res.json())
       .then(loadedNews => {

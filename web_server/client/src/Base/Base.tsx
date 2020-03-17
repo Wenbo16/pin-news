@@ -1,48 +1,72 @@
-import React from 'react';
-import { useHistory, Link } from 'react-router-dom';
-import { Input } from 'antd';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Auth from '../Auth/Auth';
 import logo from './logo.png'
 import './Base.css';
 
-const { Search } = Input;
 
-const Base = () => {
-  let history = useHistory();
+const countries = ["Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
+
+
+const Base: React.FC = () => {
+  const [searchPrefix, setSearchPrefix] = useState('');
+  const [searchResults, setSearchResults] = useState(countries);
+  const [isAutocompleteOn, setIsAutocompleteOn] = useState(false);
+  
+  // close the result list when click elsewhere
+  document.addEventListener('click', function(){
+    setIsAutocompleteOn(false);
+  });
+
+  const onChangePrefixHandler = (e:any) => {
+    let value = e.target.value;
+    setSearchPrefix(value);
+    if(value.length < 2) {
+      setIsAutocompleteOn(false);
+    } else {
+      setIsAutocompleteOn(true);
+    }
+  }
+
   return (
     <div>
       <header className="header">
-        {/* <a href="/" className="brand-logo"> */}
+        <div className="search_section">
           <img className="logo" src={logo} alt="logo" />
-        {/* </a> */}
-        <div className="search_form">
-          <Search
-            placeholder="input search text"
-            onSearch={value => console.log(value)}
-            style={{ width: 600 }}
-          />
-        </div>
-
-        <div className="user_auth">
-          <ul>
-            {Auth.isUserAuthenticated() ? (
-              <div>
-                <li>{Auth.getEmail()}</li>
-                <li>
-                  <Link to="/logout">Log out</Link>
-                </li>
-              </div>
-            ) : (
-              <div>
-                <li>
-                  <Link to="/login">Log in</Link>
-                </li>
-                <li>
-                  <Link to="/signup">Sign up</Link>
-                </li>
+          <form className="search_form">
+            <input
+              placeholder="input search text"
+              style={{ width: 600 }}
+              id="autocomplete-input"
+              className="autocomplete"
+              value={searchPrefix}
+              onChange={e => onChangePrefixHandler(e)}
+              autoComplete="off"
+              autoFocus
+            />
+            {isAutocompleteOn && (
+              <div id="search-results">
+                  {searchResults.map((res, index) => (
+                    <div className="search-results-item" key={index}>
+                      <span className="search-results-text">{res}</span>
+                    </div>
+                  ))}
               </div>
             )}
-          </ul>
+          </form>
+        </div>
+        <div className="user_auth">
+          {Auth.isUserAuthenticated() ? (
+            <>
+              <span>{Auth.getEmail()}</span>
+              <Link to="/logout">Log out</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Log in</Link>
+              <Link to="/signup">Sign up</Link>
+            </>
+          )}
         </div>
             
       </header>
