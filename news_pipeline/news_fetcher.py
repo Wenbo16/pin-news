@@ -3,7 +3,6 @@
 import datetime
 import hashlib
 import os
-import redis
 import sys
 import json
 
@@ -11,25 +10,23 @@ import json
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common/newsapi_client'))
 
+import redis
 from news_api_client import NewsApiClient
 from cloudAMQP_client import CloudAMQPClient
 
 NEWS_SOURCES = 'bbc-news, bbc-sport, bloomberg, cnn, entertainment-weekly'
 
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-
 NEWS_TIME_OUT_IN_SECONDS = 3600 * 24 * 1
 SLEEP_TIME_IN_SECONDS = 10
-
-redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT)
 
 DEDUPE_NEWS_TASK_QUEUE_URL = "amqp://ncbqvnsd:9t_kIWFv9bkiMhUYAuyQqBFoH8oCQpvx@otter.rmq.cloudamqp.com/ncbqvnsd"
 DEDUPE_NEWS_TASK_QUEUE_NAME = "pin_news_deduper"
 
+REDIS_HOST = os.environ['REDIS_HOST']
+REDIS_PORT = os.environ['REDIS_PORT']
+
+redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
 dedupe_news_queue_client = CloudAMQPClient(DEDUPE_NEWS_TASK_QUEUE_URL, DEDUPE_NEWS_TASK_QUEUE_NAME)
-
-
 newsApiClient = NewsApiClient(api_key='6e402bf74e5e4376b4d991ce169d1ed3')
 
 while True:

@@ -2,7 +2,6 @@ import json
 import os
 import pickle
 import random
-import redis
 import sys
 
 from bson.json_util import dumps
@@ -12,26 +11,27 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'common'))
 
 import mongodb_client
-# import news_recommendation_service_client
+import redis
+import news_recommendation_service_client
 
-# from cloudAMQP_client import CloudAMQPClient
+from cloudAMQP_client import CloudAMQPClient
 
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
+REDIS_HOST = os.environ['REDIS_HOST']
+REDIS_PORT = os.environ['REDIS_PORT']
 
 NEWS_TABLE_NAME = "pin_news"
 CLICK_LOGS_TABLE_NAME = 'click_logs'
 
-NEWS_LIMIT = 100
+# Maximum number of news a user can view
+NEWS_LIMIT = 100 
 NEWS_LIST_BATCH_SIZE = 10
 USER_NEWS_TIME_OUT_IN_SECONDS = 60
 
-# TODO: use your own queue
-# LOG_CLICKS_TASK_QUEUE_URL = "amqp://erygdeea:mJdprUO-I6KpJNoyO18sx23FFQm1ouIX@donkey.rmq.cloudamqp.com/erygdeea"
-# LOG_CLICKS_TASK_QUEUE_NAME = "tap-news-log-clicks-task-queue"
+LOG_CLICKS_TASK_QUEUE_URL = "amqp://kcoejiuk:X82Q-VPHf6GFwJQOTHYYoLbOdRRqOZdz@gull.rmq.cloudamqp.com/kcoejiuk"
+LOG_CLICKS_TASK_QUEUE_NAME = "pin-news-log-clicks"
 
 redis_client = redis.StrictRedis(REDIS_HOST, REDIS_PORT, db=0)
-# cloudAMQP_client = CloudAMQPClient(LOG_CLICKS_TASK_QUEUE_URL, LOG_CLICKS_TASK_QUEUE_NAME)
+cloudAMQP_client = CloudAMQPClient(LOG_CLICKS_TASK_QUEUE_URL, LOG_CLICKS_TASK_QUEUE_NAME)
 
 def getNewsSummariesForUser(user_id, page_num):
     page_num = int(page_num)
@@ -48,7 +48,6 @@ def getNewsSummariesForUser(user_id, page_num):
         # If end_index is out of range (begin_index is within the range), this
         # will return all remaining news ids.
         sliced_news_digests = news_digests[begin_index:end_index]
-        print (sliced_news_digests)
         db = mongodb_client.get_db()
         sliced_news = list(db[NEWS_TABLE_NAME].find({'digest':{'$in':sliced_news_digests}}))
     else:
@@ -78,12 +77,14 @@ def getNewsSummariesForUser(user_id, page_num):
             news['time'] = 'today'
     return json.loads(dumps(sliced_news))
 
-# def logNewsClickForUser(user_id, news_id):
-#     message = {'userId': user_id, 'newsId': news_id, 'timestamp': datetime.utcnow()}
+def logNewsClickForUser(user_id, news_id):
+    message = {'userId': user_id, 'newsId': news_id, 'timestamp': datetime.utcnow()}
 
-#     db = mongodb_client.get_db()
-#     db[CLICK_LOGS_TABLE_NAME].insert(message)
+    # log may have some other use for backup and verification
+    db = mongodb_client.get_db()
+    db[CLICK_LOGS_TABLE_NAME].insert(message)
 
-#     # Send log task to machine learning service for prediction
-#     message = {'userId': user_id, 'newsId': news_id, 'timestamp': str(datetime.utcnow())}
-#     cloudAMQP_client.sendMessage(message);
+    # Send log task to machine learning service for prediction
+    message = {'userId': user_id, 'newsId': news_id, 'timestamp': str(datetime.utcnow())}
+    cloudAMQP_client.sendMessage(message)
+    

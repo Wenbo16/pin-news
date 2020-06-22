@@ -1,0 +1,8 @@
+FROM python:3.6
+
+MAINTAINER wenbo.feng92@gmail.com
+
+COPY ./requirements.txt .
+COPY ./common /common
+
+RUN pip install --trusted-host pypi.python.org -r requirements.txt

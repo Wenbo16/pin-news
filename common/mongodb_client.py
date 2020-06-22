@@ -1,8 +1,9 @@
+import os
 from pymongo import MongoClient
 
-MONGO_DB_HOST = 'localhost'
-MONGO_DB_PORT = '27017'
-DB_NAME = 'pin-news'
+MONGO_DB_HOST = os.environ['MONGO_DB_HOST']
+MONGO_DB_PORT = os.environ['MONGO_DB_PORT']
+DB_NAME = os.environ['DB_NAME']
 
 # singleton instance
 client = MongoClient("%s:%s" % (MONGO_DB_HOST, MONGO_DB_PORT))

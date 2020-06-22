@@ -49,7 +49,7 @@ class NewsPanel extends React.Component<any, FormState> {
       return;
     }
 
-    let url = 'http://localhost:8080/news/userId/' + Auth.getEmail() + '/pageNum/' + pageNum;
+    let url = `http://${process.env.REACT_APP_WEB_SERVER_HOST}:${process.env.REACT_APP_WEB_SERVER_PORT}/news/userId/` + Auth.getEmail() + '/pageNum/' + pageNum;
 
     const request = new Request(encodeURI(url), {
       method: 'GET',
@@ -62,7 +62,6 @@ class NewsPanel extends React.Component<any, FormState> {
       .then(res => res.json())
       .then(loadedNews => {
         if (!loadedNews || loadedNews.length === 0) {
-          console.log('news.length === 0')
           this.setState({ loadedAll: true });
         }
         this.setState({

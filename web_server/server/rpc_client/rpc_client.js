@@ -1,9 +1,10 @@
 var jayson = require('jayson');
 
 var client = jayson.client.http({
-  port: 4040,
-  hostname: 'localhost'
+  port: parseInt(process.env.BACKEND_SERVER_PORT),
+  hostname: 'backend_server_service'
 });
+
 
 // Get news summaries for a user
 function getNewsSummariesForUser(user_id, page_num, callback) {
@@ -14,6 +15,7 @@ function getNewsSummariesForUser(user_id, page_num, callback) {
 }
 
 // Log a news click event for a user
+// callback function must be provided
 function logNewsClickForUser(user_id, news_id) {
   client.request('logNewsClickForUser', [user_id, news_id], function(err, error, response) {
     if (err) throw err;
@@ -21,6 +23,6 @@ function logNewsClickForUser(user_id, news_id) {
 }
 
 module.exports = {
-  getNewsSummariesForUser: getNewsSummariesForUser,
-  logNewsClickForUser: logNewsClickForUser
+  getNewsSummariesForUser,
+  logNewsClickForUser
 };

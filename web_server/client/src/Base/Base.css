@@ -1,5 +1,4 @@
-.header {
-  padding: 15px;
+header nav {
   position: fixed;
   width: 100%;
   height: 90px;
@@ -9,17 +8,30 @@
   border-bottom: none;
 }
 
-.search_section {
-  margin-left: 10em;
+.search_container {
   max-width: 900px;
+  margin: 0 2rem;
+  float: left;
+  line-height: 90px;
 }
 
-.search_form {
-  position: relative;
-  margin-left: 170px;
+
+.search_container .logo {
+  width: 15%;
+  display: inline-block;
+  margin-right: 1rem;
 }
 
-#search-results{
+.search_container .logo img {
+  width: 100%;
+}
+
+.search_container form {
+  display: inline-block;
+  line-height: 2rem;
+}
+
+#search-results {
   position: absolute;
   left: 0;
   right: 0;
@@ -41,19 +53,12 @@
 }
 .user_auth {
   margin: 0;
-  right: 40px;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  list-style: none;
+  float: right;
 }
 
-.logo {
-  width: 150px;
-  height: auto;
-  margin: 0 2em 0 0;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+.user_auth li {
+  display: inline-block;
+  line-height: 90px;
+  margin-right: 1rem;
 }

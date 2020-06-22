@@ -30,45 +30,46 @@ const Base: React.FC = () => {
 
   return (
     <div>
-      <header className="header">
-        <div className="search_section">
-          <img className="logo" src={logo} alt="logo" />
-          <form className="search_form">
-            <input
-              placeholder="input search text"
-              style={{ width: 600 }}
-              id="autocomplete-input"
-              className="autocomplete"
-              value={searchPrefix}
-              onChange={e => onChangePrefixHandler(e)}
-              autoComplete="off"
-              autoFocus
-            />
-            {isAutocompleteOn && (
-              <div id="search-results">
-                  {searchResults.map((res, index) => (
-                    <div className="search-results-item" key={index}>
-                      <span className="search-results-text">{res}</span>
-                    </div>
-                  ))}
-              </div>
+      <header>
+        <nav>
+          <div className="search_container">
+            <div className="logo"><img src={logo} alt="logo" /></div>
+            <form>
+              <input
+                placeholder="input search text"
+                style={{ width: 600 }}
+                id="autocomplete-input"
+                className="autocomplete"
+                value={searchPrefix}
+                onChange={e => onChangePrefixHandler(e)}
+                autoComplete="off"
+                autoFocus
+              />
+              {isAutocompleteOn && (
+                <div id="search-results">
+                    {searchResults.map((res, index) => (
+                      <div className="search-results-item" key={index}>
+                        <span className="search-results-text">{res}</span>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </form>
+          </div>
+          <ul className="user_auth">
+            {Auth.isUserAuthenticated() ? (
+              <>
+                <li><span>{Auth.getEmail()}</span></li>
+                <li><Link to="/logout">Log out</Link></li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/login">Log in</Link></li>
+                <li><Link to="/signup">Sign up</Link></li>
+              </>
             )}
-          </form>
-        </div>
-        <div className="user_auth">
-          {Auth.isUserAuthenticated() ? (
-            <>
-              <span>{Auth.getEmail()}</span>
-              <Link to="/logout">Log out</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/login">Log in</Link>
-              <Link to="/signup">Sign up</Link>
-            </>
-          )}
-        </div>
-            
+          </ul>
+        </nav>
       </header>
     </div>
   )

@@ -5,6 +5,7 @@ import Auth from '../Auth/Auth';
 import { Errors } from '../Auth/AuthInterface'
 import LoginForm from './LoginForm';
 
+
 interface User {
   [index: string]: string
   email: string,
@@ -36,7 +37,7 @@ class LoginPage extends React.Component<RouteComponentProps, FormState> {
     const { email, password }: {email: string, password: string}  = user;
 
     // Post login data and handle response.
-    fetch('http://localhost:8080/auth/login', {
+    fetch(`http://${process.env.REACT_APP_WEB_SERVER_HOST}:${process.env.REACT_APP_WEB_SERVER_PORT}/auth/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
